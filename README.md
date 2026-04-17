@@ -1,31 +1,123 @@
-# LifeLineDB
-Healthcare management is becoming increasingly complex in the present day due to the enormous volume of
-data involved and the need for efficient hospital operations. Managing information concerning patients,
-doctors, appointments, admissions, prescriptions, and billing by traditional methods is prone to redundancy
-and inefficiency. Keeping this in mind, LifeLineDB is a relational database-driven healthcare management
-project developed to efficiently handle such data. The main aim of this project is to develop a structured and
-efficient database system for efficient data handling and management in a healthcare environment.
+# LifeLineDB — Hospital Management System
 
-The methodology of this project is based on a systematic approach to design a database system. Initially, the
-requirements of the system were analysed to identify the main entities involved in a hospital environment such
-as Patients, Doctors, Departments, Appointments, Rooms, Admissions, Billing, and Prescriptions. An EntityRelationship (ER) diagram is developed based on the relationships among these entities. The ER diagram is
-converted into a relational schema normalized to Third Normal Form (3NF) for efficient data handling and to
-avoid redundancy. The database is developed using MySQL. SQL is used for data manipulation and retrieval.
-A simple graphical user interface is also developed for efficient data handling and interaction using Python
-(Tkinter).
+A relational database-driven healthcare management system built with **MySQL** and **Python (Tkinter)**.
 
-The results of the project have shown an efficient and structured healthcare database system that can handle
-different aspects of hospital management. The implementation of the database has ensured data consistency,
-integrity, and minimization of data redundancy through normalization. The features of the database, such as
-automated triggers for updating room status, data storage for patient information, billing information, and data
-views for easier data retrieval, have ensured the efficiency of the database system. The creation of the
-database's GUI has also ensured the usability of the database system, thus making it applicable in academic
-purposes for simulating the management of hospitals in the real world.
+---
 
-Conclusion: The LifeLineDB database management system has successfully shown the applicability of
-database management concepts in designing a centralized healthcare management system. The database
-management system has shown its efficiency in managing hospital data in a structured manner. Although the
-database management system has some limitations in terms of its applicability in the real world due to its
-simple features, it has shown a clear understanding of database management concepts. The database
-management system can also serve as a base for further development of features such as security in the future.
-Software tools used: MySQL, Python, Tkinter, SQL.
+## Project Structure
+
+```
+LifeLineDB/
+├── database/
+│   └── schema.sql          ← MySQL schema, triggers, views, sample data
+├── backend/
+│   └── db.py               ← All database operations (CRUD)
+├── gui/
+│   └── app.py              ← Tkinter GUI application
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Prerequisites
+- **Python 3.8+**
+- **MySQL 8.0+** running locally
+
+### 2. Install Python dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Set up the database
+Open MySQL and run:
+```sql
+SOURCE /path/to/LifeLineDB/database/schema.sql;
+```
+Or via terminal:
+```bash
+mysql -u root -p < database/schema.sql
+```
+
+### 4. Configure database credentials
+Edit `backend/db.py` — change the `DB_CONFIG` block:
+```python
+DB_CONFIG = {
+    "host":     "localhost",
+    "user":     "root",
+    "password": "your_password",
+    "database": "LifeLineDB",
+}
+```
+Or use environment variables:
+```bash
+export LIFELINEDB_USER=root
+export LIFELINEDB_PASS=yourpassword
+```
+
+### 5. Launch the GUI
+```bash
+python gui/app.py
+```
+
+---
+
+## Database Schema
+
+| Table           | Description                              |
+|----------------|------------------------------------------|
+| `Departments`   | Hospital departments                     |
+| `Doctors`       | Doctor records linked to departments     |
+| `Patients`      | Patient demographics & contact info      |
+| `Rooms`         | Room inventory with type and daily rate  |
+| `Appointments`  | Scheduled/completed patient appointments |
+| `Admissions`    | Inpatient stays and room allocation      |
+| `Prescriptions` | Medicines, dosage, and instructions      |
+| `Billing`       | Itemized bills with payment tracking     |
+
+### Views
+- `vw_patient_appointments` — joined appointment history
+- `vw_active_admissions`    — currently admitted patients
+- `vw_billing_summary`      — billing overview per patient
+
+### Triggers
+- `trg_room_on_admit`     — auto-marks room **Occupied** on admission
+- `trg_room_on_discharge` — auto-marks room **Available** on discharge
+
+---
+
+## GUI Modules
+
+| Screen          | Features                                           |
+|----------------|----------------------------------------------------|
+| Dashboard       | Live stats cards + recent appointment table        |
+| Patients        | Full CRUD, search by name/phone                    |
+| Doctors         | Add/delete, linked to departments                  |
+| Departments     | Add and view departments                           |
+| Appointments    | Book, mark complete/cancelled                      |
+| Rooms           | Add rooms, colour-coded availability               |
+| Admissions      | Admit & discharge patients, triggers room status   |
+| Prescriptions   | Add prescriptions linked to patient + doctor       |
+| Billing         | Create bills, mark as paid                         |
+
+---
+
+##  Technology Stack
+
+| Layer      | Technology            |
+|------------|-----------------------|
+| Database   | MySQL 8.0             |
+| Backend    | Python 3 + mysql-connector |
+| GUI        | Tkinter               |
+| Queries    | SQL (DDL, DML, Views, Triggers) |
+
+---
+
+##  Notes
+- The system uses **3NF normalization** throughout
+- Generated column `total_amount` in `Billing` is auto-computed by MySQL
+- All foreign keys use `ON DELETE CASCADE` or `ON DELETE SET NULL` as appropriate
+- Sample data for 5 patients, 5 doctors, 5 rooms, and related records is included
+
